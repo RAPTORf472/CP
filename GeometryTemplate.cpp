@@ -73,8 +73,6 @@ bool in(Point a, Segment s) {
     return ((a.x - s.x1) * (a.x - s.x2) <= 0) && ((a.y - s.y1) * (a.y - s.y2) <= 0);
     
 }
-    
-}
 
 signed main() {
     
