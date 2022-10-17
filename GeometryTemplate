@@ -1,0 +1,83 @@
+#include <bits/stdc++.h>
+#define db double
+
+using namespace std;
+
+struct Point {
+    
+    int x, y;
+    
+    bool operator == (const Point &p) {
+        
+        return (x == p.x && y == p.y);
+        
+    }
+    
+    bool operator < (const Point &p) {
+        
+        return (x == p.x) ? (y < p.y) : (x < p.x);
+        
+    }
+    
+};
+
+struct Line {
+    
+    int a, b, c;
+    
+};
+
+struct Segment {
+    
+    int x1, y1, x2, y2;
+    
+    Point d1, d2;
+    
+    void process() {
+        
+        d1 = {x1, y1};
+        d2 = {x2, y2};
+        
+        if (d2 < d1) {
+            
+            swap(x1, x2);
+            swap(y1, y2);
+            swap(d1, d2);
+            
+        }
+        
+    }
+    
+    Line getLine() {
+     
+        return {(y1 - y2), (x2 - x1), (x1 * y2 - x2 * y1)};
+        
+    }
+    
+    bool operator == (const Segment &s) {
+        
+        return (x1 == s.x1) && (y1 == s.y1) && (x2 == s.x2);
+        
+    }
+    
+    bool isPoint() {
+        
+        return (x1 == x2) && (y1 == y2);
+        
+    }
+    
+};
+
+bool in(Point a, Segment s) {
+    
+    return ((a.x - s.x1) * (a.x - s.x2) <= 0) && ((a.y - s.y1) * (a.y - s.y2) <= 0);
+    
+}
+    
+}
+
+signed main() {
+    
+    
+    
+}
