@@ -1,0 +1,3 @@
+*Palindrome
+
+- Có thể kiểm tra xem sâu palindrome dài nhất có tâm x trong log(n) bằng Binary Search + Hashing.
