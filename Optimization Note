@@ -1,1 +1,2 @@
-1. Replace lower bound with offline (if Possible)
+1. Replace map with offline lower bound (if Possible)
+2. uint is unsigned int
