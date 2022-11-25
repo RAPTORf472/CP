@@ -1,9 +1,21 @@
 #include <bits/stdc++.h>
+#define ii pair<int, int>
+#define fs first
+#define sc second
+#define iii pair<int, ii>
+#define fs3 fs
+#define sc3 sc.fs
+#define rd3 sc.sc
+#define iiii pair<ii, ii>
+#define fs4 fs.fs
+#define sc4 fs.sc
+#define rd4 sc.fs
+#define fo4 sc.sc
 #define db double
 
 using namespace std;
 
-const double PI = 3.14159265358979323846;
+const double PI = acos(-1);
 const int INF = 1e9;
 const int N = 1005;
 
@@ -212,10 +224,94 @@ db P(vector<Point> &pt) {
     
 }
 
-int n;
+struct Circle {
+    
+    Point a; db R;
+    
+    double S, P;
+    
+    Circle(const int x, const int y, const db R) {
+        
+        this -> a = {x, y};
+        this -> R = R;
+        this -> S = R * R * PI;
+        this -> P = 2 * R * PI;
+        
+    }
+    
+    Circle(const Point a, const db R) {
+        
+        Circle(a.x, a.y, R);
+        
+    }
+    
+    Circle() {}
+    
+    void init (const int x, const int y, const db R) {
+        
+        this -> a = {x, y};
+        this -> R = R;
+        this -> S = R * R * PI;
+        this -> P = 2 * R * PI;
+        
+    }
+    
+    db peri() {
+        
+        return this -> P;
+        
+    } 
+    
+    db area() {
+        
+        return this -> S;
+        
+    }
+    
+    Point center() {
+        
+        return this -> a;
+        
+    }
+    
+};
+
+int n, R;
+db d;
+
+Circle mem[N];
+
+bool check(vector<Point> &pt, int cnt) {
+    
+    pt.push_back(pt[0]);
+    
+    int sz = pt.size();
+    db total = mem[1].peri();
+    
+    if (cnt == 1) {
+        
+        return (total <= d);
+        
+    }
+    
+    for (int i = 0; i < sz - 1; i++) {
+        
+        total += pt[i].dist(pt[i + 1]);
+        
+    }
+    
+    return (total <= d);
+    
+} 
+
+void solve() {
+    
+}
 
 signed main() {
     
-
+    int T; cin >> T;
+    
+    while (T--) solve();
     
 }
