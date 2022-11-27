@@ -12,6 +12,10 @@
 #define rd4 sc.fs
 #define fo4 sc.sc
 #define db double
+#define dummy {-INF, -INF}
+#define precise(x) cout << setprecision(x) << fixed;
+#pragma GCC Optimize("O2")
+#define endl "\n"
 
 using namespace std;
 
@@ -21,51 +25,226 @@ const int N = 1005;
 
 struct Point {
     
-    int x, y;
+    db x, y;
     
-    bool operator == (const Point &p) {
+    inline bool operator == (const Point &p) const {
         
         return (x == p.x && y == p.y);
         
     }
     
-    bool operator < (const Point &p) {
+    inline bool operator < (const Point &p) const {
         
         return (x == p.x) ? (y < p.y) : (x < p.x);
         
     }
     
-    db dist(Point &p) {
+    inline Point operator + (Point a) {
+        
+        return {x + a.x, y + a.y};
+        
+    }
+    
+    inline Point operator - (Point a) {
+        
+        return {x - a.x, y - a.y};
+        
+    }
+    
+    inline Point operator / (db a) {
+        
+        return {x / a, y / a};
+        
+    }
+    
+    inline void operator /= (int a) {
+        
+        this -> x /= a;
+        this -> y /= a;
+        
+    }
+    
+    inline void operator += (Point a) {
+        
+        this->x += a.x;
+        this->y += a.y;
+        
+    }
+    
+    inline void operator -= (Point a) {
+        
+        this->x -= a.x;
+        this->y -= a.y;
+        
+    }
+    
+    inline db cross(Point a) {
+        
+        return x * a.y - y * a.x;
+        
+    }
+    
+    inline db dot(Point a) {
+        
+        return x * a.x + y * a.y;
+        
+    }
+    
+    inline db dist(Point &p) {
      
         return sqrt((x - p.x) * (x - p.x) + (y - p.y) * (y - p.y));
         
     }
     
+    inline bool isPoint() {
+        
+        return !(x == -INF && y == -INF);
+        
+    }
+    
+    inline Point midpoint(Point b) {
+        
+        return {(x + b.x) / 2, (y + b.y) / 2};
+        
+    }
+    
 };
+
+struct Vector {
+    
+    db x, y;
+    
+    Vector() {};
+    Vector(db x, db y) : x(x), y(y) {};
+    
+    //cross product
+    
+    inline db operator ^ (Vector a) {
+        
+        return x * a.y - y * a.x;
+        
+    }
+    
+    Vector getRoot() {
+        
+        return {0.0, 1.0};
+        
+    }
+    
+    //dot product
+    inline db operator * (Vector a) {
+        
+        return x * a.x + y * a.y;
+        
+    }
+    
+    
+    inline Vector operator - (Vector a) {
+        
+        return {x - a.x, y - a.y};
+        
+    }
+    
+    inline Vector operator / (db a) {
+        
+        return {x / a, y / a};
+        
+    }
+    
+    inline bool operator == (Vector a) {
+        
+        return x == a.x && y == a.y;
+        
+    }
+    
+};
+
+inline bool A (Vector v) {
+    
+    return ((v.getRoot() ^ v) > 0) || ((v.getRoot() ^ v) == 0 && v.getRoot() * v > 0);
+    
+}
+
+inline bool operator < (Vector a, Vector b) {
+    
+    return (A(a) && !A(b)) || (A(a) == A(b) && (a ^ b) > 0);
+    
+}
 
 struct Line {
     
-    int a, b, c;
-
+    db a, b, c;
+    
+    inline Point inter(const Line &l) {
+        
+        db D = a * l.b - b * l.a;
+        db Dx = b * l.c - c * l.b;
+        db Dy = c * l.a - a * l.c;
+        
+        if (D == 0) return dummy;
+        
+        return {Dx / D, Dy / D};
+        
+    }
+    
+    // 1 điểm nằm trên đt và điểm còn lại ngoài vẫn tính cùng phía
+    
+    inline bool sameSide(Point p1, Point p2) {
+        
+        return (a * p1.x + b * p1.y + c) * (a * p2.x + b * p2.y + c) >= 0;
+        
+    }
+    
+    // Còn cái này là hong nha bé ơi (onLineSame để xác định xem 2 điểm trên cùng 1 đường có tính cùng không)
+    
+    inline bool sameSide(Point p1, Point p2, bool onLineSame) {
+        
+        double d1 = a * p1.x + b * p1.y + c, d2 = a * p2.x + b * p2.y + c;
+        
+        if (d1 == 0 && d2 == 0) return onLineSame;
+        
+        return d1 * d2 > 0;
+        
+    }
+    
+    inline bool has(Point &p) {
+        
+        return (abs(a * p.x + b * p.y + c) <= (0.01));
+        
+    }
     
 };
 
 struct Segment {
     
-    int x1, y1, x2, y2;
+    db x1, y1, x2, y2;
+    Line L;
     
     Point d1, d2;
     
-    Segment(int x1, int y1, int x2, int y2) {
+    Segment(db x1, db y1, db x2, db y2) {
         
         this -> x1 = x1;
         this -> y1 = y1;
         this -> x2 = x2;
         this -> y2 = y2;
+
+        process();
         
     }
     
-    void process() {
+    Segment(Point p1, Point p2) {
+        
+        this -> x1 = p1.x;
+        this -> y1 = p1.y;
+        this -> x2 = p2.x;
+        this -> y2 = p2.y;    
+
+        process();
+        
+    }
+    
+    inline void process() {
         
         d1 = {x1, y1};
         d2 = {x2, y2};
@@ -78,40 +257,36 @@ struct Segment {
             
         }
         
+        L = getLine();
+        
     }
     
-    Line getLine() {
+    inline Line getLine() {
      
         return {(y1 - y2), (x2 - x1), (x1 * y2 - x2 * y1)};
         
     }
     
-    bool operator == (const Segment &s) {
+    inline bool operator == (const Segment &s) {
         
         return (x1 == s.x1) && (y1 == s.y1) && (x2 == s.x2);
         
     }
     
-    bool isPoint() {
-        
-        return (x1 == x2) && (y1 == y2);
-        
-    }
-    
-    db slope() {
+    inline db slope() {
         
         if (x1 == x2) return INF;
         return (y2 - y1) / double(x2 - x1);
         
     }
     
-    db len() {
+    inline db len() {
         
         return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
         
     }
     
-    bool perpen(Segment &s) {
+    inline bool perpen(Segment &s) {
         
         db sl1 = slope(), sl2 = s.slope();
         
@@ -121,108 +296,364 @@ struct Segment {
         
     }
     
-    bool in(Point a) {
-    
-        return ((a.x - x1) * (a.x - x2) <= 0) && ((a.y - y1) * (a.y - y2) <= 0);
+    inline bool has(Point a) {
+
+        return L.has(a) && ((a.x - x1) * (a.x - x2) <= 0) && ((a.y - y1) * (a.y - y2) <= 0);
         
     }
+    
+    inline Point interSeg(Segment s) {
+        
+        Line l1 = getLine(), l2 = s.getLine();
+        
+        Point p = l1.inter(l2);
+        if (has(p) && s.has(p)) return p;
+        return dummy;
+        
+    }
+    
+    inline Point interLine(const Line &l) {
+        
+        Line l1 = getLine();
+        
+        Point p = l1.inter(l);
+        if (has(p)) return p;
+        else return dummy;
+        
+    }
+    
 };
 
-db S3raw(Point a, Point b, Point c) {
+struct Helper {
     
-    return (a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y));
-    
-}
-
-db S3(Point a, Point b, Point c) {
-    
-    return abs(S3raw(a, b, c));
-    
-}
-
-bool cw(Point a, Point b, Point c) {
-    
-    return S3raw(a, b, c) > 0;
-    
-}
-
-bool ccw (Point a, Point b, Point c) {
-    
-    return S3raw(a, b, c) < 0;
-    
-}
-
-void convexHull(vector<Point> &p) {
-    
-    if (p.size() == 1) return;
-    
-    sort(p.begin(), p.end());
-    
-    Point p1 = p[0], p2 = p.back();
-
-    vector<Point> up, down;
-    
-    up.push_back(p1), down.push_back(p1);
-    
-    for (int i = 1; i < p.size(); i++) {
+    inline db S3raw(Point a, Point b, Point c) {
         
-        if (i == p.size() - 1 || cw(p1, p[i], p2)) {
+        return (a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y));
+        
+    }
+    
+    inline db S3(Point a, Point b, Point c) {
+        
+        return abs(S3raw(a, b, c));
+        
+    }
+    
+    inline bool cw(Point a, Point b, Point c) {
+        
+        return S3raw(a, b, c) > 0;
+        
+    }
+    
+    inline bool ccw (Point a, Point b, Point c) {
+        
+        return S3raw(a, b, c) < 0;
+        
+    }
+    
+    inline bool isPoint(Point p) {
+        
+        return !(p.x == -INF && p.y == -INF);
+        
+    }
+    
+    
+    inline vector<Point> reorder(vector<Point> P) {
+    
+        int pos = 0; 
+        
+        for (int i = 1; i < P.size(); i++) {
             
-            while (up.size() >= 2 && !cw(up[up.size() - 2], up[up.size() - 1], p[i])) 
-                up.pop_back();
+            if (P[i].y < P[pos].y || P[i].y == P[pos].y && P[i].x < P[pos].x) pos = i;
+            
+        }
+        
+        rotate(P.begin(), P.begin() + pos, P.end());
+        
+        return P;
+    
+    }
+    
+    inline vector<Point> neg(vector<Point> P) {
+        
+        for (int i = 0; i < P.size(); i++) {
+            
+            P[i] = {-P[i].x, -P[i].y};
+            
+        }
+        
+        return P;
+        
+    }
+    
+} misc;
+
+struct Ray {
+    
+    Point start, dir;
+    
+    Ray() {}
+    
+    Ray(Point start, Point dir) {
+        
+        this -> start = start;
+        this -> dir = dir;
+        
+    }
+    
+    Ray (db x1, db y1, db x2, db y2) {
+        
+        this -> start = {x1, y1};
+        this -> dir = {x2, y2};
+        
+    }
+    
+    inline Line getLine() {
+        
+        Segment s(start.x, start.y, dir.x, dir.y);
+        return s.getLine();
+        
+    }
+    
+    inline bool has(const Point &p) {
+        
+        Segment s1(start, dir), s2(start, p);
+        
+        return s1.has(p) || s2.has(dir); 
+        
+        
+    }
+    
+    inline Point interRay(Ray r) {
+        
+        Line l1 = getLine(), l2 = r.getLine();
+        Point p = l1.inter(l2);
+        
+        if (r.has(p) && has(p)) return p;
+        return dummy;
+        
+    }   
+    
+    inline Point interSeg(Segment s) {
+        
+        Line l1 = getLine(), l2 = s.getLine();
+        
+        Point p = l1.inter(l2);
+        
+        if (s.has(p) && has(p)) return p;
+        return dummy;        
+    }
+    
+    inline Point interLine(const Line &l2) {
+        
+        Line l1 = getLine();
+        Point p = l1.inter(l2);
+        
+        if (has(p)) return p;
+        return dummy;
+        
+    }
+    
+};
+
+//nên để theo chiều kim đồng hồ
+
+struct Polygon {
+    
+    vector<Point> P;
+    set<Point> Points;
+    
+    Polygon() {}
+    
+    Polygon (vector<Point> P) {
+        
+        this->P = P;
+        for (Point p : P) Points.insert(p);
+        
+    }
+    
+    inline void insert(Point p) {
+        
+        P.push_back(p);
+        Points.insert(p);
+        
+    }
+    
+    inline bool isVertice(Point p) {
+        
+        return *Points.lower_bound(p) == p;
+        
+    }
+    
+    inline vector<Point> getConvexHull() {
+    
+        if (P.size() == 1) return P;
+        
+        sort(P.begin(), P.end());
+        
+        Point p1 = P[0], p2 = P.back();
+    
+        vector<Point> up, down;
+        
+        up.push_back(p1), down.push_back(p1);
+        
+        for (int i = 1; i < P.size(); i++) {
+            
+            if (i == P.size() - 1 || misc.cw(p1, P[i], p2)) {
                 
-            up.push_back(p[i]);
+                while (up.size() >= 2 && !misc.cw(up[up.size() - 2], up[up.size() - 1], P[i])) 
+                    up.pop_back();
+                    
+                up.push_back(P[i]);
+                
+            }
+            
+            if (i == P.size() - 1 || misc.ccw(p1, P[i], p2)) {
+                
+                while (down.size() >= 2 && !misc.ccw(down[down.size() - 2], down[down.size() - 1], P[i]))
+                    down.pop_back();
+                
+                down.push_back(P[i]);
+    
+            }
             
         }
         
-        if (i == p.size() - 1 || ccw(p1, p[i], p2)) {
+        vector<Point> cv;
+        
+        for (int i = 0; i < down.size(); i++) cv.push_back(down[i]);
+        for (int i = up.size() - 2; i > 0; i--) cv.push_back(up[i]);
+        auto it = unique(cv.begin(), cv.end());
+        cv.resize(distance(cv.begin(), it));
+        
+        return cv;
+        
+    }
+    
+    inline db getS() {
+    
+        db area = 0;
+        int sz = P.size();
+        
+        for (int i = 0; i < sz; i++) {
             
-            while (down.size() >= 2 && !ccw(down[down.size() - 2], down[down.size() - 1], p[i]))
-                down.pop_back();
-            
-            down.push_back(p[i]);
-
+            area += ((P[(i + 1) % sz].x - P[i].x) * (P[(i + 1) % sz].y + P[i].y));
+    
         }
         
-    }
-    
-    p.clear();
-    
-    for (int i = 0; i < down.size(); i++) p.push_back(down[i]);
-    for (int i = up.size() - 2; i > 0; i--) p.push_back(up[i]);
-    auto it = unique(p.begin(), p.end());
-    p.resize(distance(p.begin(), it));
-    
-}
-
-db S(vector<Point> &pt) {
-    
-    db area = 0;
-    int sz = pt.size() - 1;
-    
-    for (int i = 0; i < sz; i++) {
+        return abs(area) / 2;
         
-        area += ((pt[i + 1].x - pt[i].x) * (pt[i + 1].y + pt[i].y));
-
     }
     
-    return abs(area) / 2;
-    
-}
-
-db P(vector<Point> &pt) {
-    
-    db peri = 0;
-    int sz = pt.size() - 1;
-    
-    for (int i = 0; i < sz; i++) {
+    inline db getP() {
         
-        peri += pt[i].dist(pt[i + 1]);
+        db peri = 0;
+        int sz = P.size();
+        
+        for (int i = 0; i < sz; i++) {
+            
+            peri += P[i].dist(P[(i + 1) % sz]);
+        }
+        
+        return peri;
+        
     }
     
-    return peri;
+//Tìm các cặp điểm xuyên tâm chiếu (Là mấy cái cặp mà tồn tại 2 đường thẳng song song đi qua 2 điểm đó mà không cắt vào cái đa giác đang xét á)
+//Nó là two pointer trên convex hull. YES, STOP MESSING WITH MEEEE
+    inline db caliper() { //Đổi kiểu return theo nhu cầu sử dụng (Sẽ nói ở dưới)
+       
+       if (P.size() == 1) return 0;
+       if (P.size() == 2) return P[0].dist(P[1]);
+       
+       int k = 1, sz = P.size();
+       
+       while (misc.S3(P[sz - 1], P[0], P[(k + 1) % sz]) > misc.S3(P[sz - 1], P[0], P[k])) k++;
+       
+       db res = 0;
+       
+       for (int i = 0, j = k; i <= k && j < sz; i++) {
+           
+           res = max(res, P[i].dist(P[j])); // 2 điểm này đạt (Có thể push vào vector hay j đó)
+           
+           while (j < sz && misc.S3(P[i], P[(i + 1) % sz], P[(j + 1) % sz]) >
+                            misc.S3(P[i], P[(i + 1) % sz], P[j])) {
+               
+               res = max(res, P[i].dist(P[(j + 1) % sz])); //2 điểm này cũng vậy
+               j++;
+               
+           }
+           
+       }
+       
+       return res;
+        
+    }
     
-}
+    inline vector<Point> minkowskiSum(Polygon Q) {
+        
+        vector<Point> P1 = P, P2 = Q.P;
+        P1 = misc.reorder(P1);
+        P2 = misc.neg(P2);
+        P2 = misc.reorder(P2);
+        
+        P1.push_back(P1[0]);
+        P1.push_back(P1[1]);
+        P2.push_back(P2[0]);
+        P2.push_back(P2[1]);
+        
+        vector<Point> res;
+        
+        int i = 0, j = 0;
+        
+        while (i < P1.size() - 2 || j < P2.size() - 2) {
+            
+            res.push_back(P1[i] + P2[j]);
+            
+            int cross = (P1[i + 1] - P1[i]).cross(P2[j + 1] - P2[j]);
+            
+            if (cross >= 0) i++;
+            if (cross <= 0) j++;
+            
+        }
+        
+        res.erase(unique(res.begin(), res.end()), res.end());
+        
+        return res;
+        
+    }
+    
+    inline bool has(Point p) {
+        
+        Point right = {1, 0};
+        Point dir = p + right;
+        
+        Ray r(p.x, p.y, dir.x, dir.y);
+        int cnt = 0;
+        int sz = P.size();
+        
+        for (Point i : P) if (i == p) return true;
+        
+        for (int i = 0; i < sz; i++) {
+            
+            Segment s(P[i], P[(i + 1) % sz]);
+            if (s.has(p)) return true;
+            
+            Point p1 = r.interSeg(s);
+            
+            if (p1 == P[i]) return true;
+            if (p1.isPoint()) {
+                
+                cnt++;
+
+            }
+            
+        }
+        
+        return cnt & 1;
+        
+    }
+    
+};
 
 struct Circle {
     
@@ -230,7 +661,7 @@ struct Circle {
     
     double S, P;
     
-    Circle(const int x, const int y, const db R) {
+    Circle(const db x, const db y, const db R) {
         
         this -> a = {x, y};
         this -> R = R;
@@ -247,7 +678,7 @@ struct Circle {
     
     Circle() {}
     
-    void init (const int x, const int y, const db R) {
+    void init (const db x, const db y, const db R) {
         
         this -> a = {x, y};
         this -> R = R;
@@ -276,41 +707,74 @@ struct Circle {
     
 };
 
-int n, R;
-db d;
+struct line {
+    db m, b;
 
-Circle mem[N];
+    mutable function<const line*()> succ;
+    bool operator<(const line& rhs) const {
+        if (rhs.b != -INF) return m < rhs.m;
+        const line* s = succ();
+        if (!s) return 0;
+        db x = rhs.m;
+        return b - s->b < (s->m - m) * x;
+    }
+};
 
-bool check(vector<Point> &pt, int cnt) {
-    
-    pt.push_back(pt[0]);
-    
-    int sz = pt.size();
-    db total = mem[1].peri();
-    
-    if (cnt == 1) {
-        
-        return (total <= d);
-        
+//Maximum Dynamic Hull
+struct DynamicHull : public multiset<line> { 
+    bool bad(iterator y) {
+        auto z = next(y);
+        if(y == begin()) {
+            if (z == end()) return 0;
+            return y->m == z->m && y->b <= z->b;
+        }
+
+        auto x = prev(y);
+        if (z == end()) return y->m == x->m && y->b <= x->b;
+        return 1.0 * (x->b - y->b) * (z->m - y->m) 
+            >= 1.0 * (y->b - z->b) * (y->m - x->m);
     }
-    
-    for (int i = 0; i < sz - 1; i++) {
+
+    void add(db m, db b) {
+        auto y = insert({ m, b });
+        y->succ = [=] { 
+            return next(y) == end() ? 0 : &*next(y); 
+        };
         
-        total += pt[i].dist(pt[i + 1]);
-        
+        if(bad(y)) {
+            erase(y);
+            return;
+        }
+
+        while (next(y) != end() && bad(next(y))) erase(next(y));
+        while (y != begin() && bad(prev(y))) erase(prev(y));
     }
-    
-    return (total <= d);
-    
-} 
+
+    db eval(db x) {
+        auto l = *lower_bound((line) { x, -INF });
+        return l.m * x + l.b;
+    }
+};
+
+
+int n;
 
 void solve() {
+
+
     
 }
 
 signed main() {
     
-    int T; cin >> T;
+    ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+    
+    int T;
+    bool multiTest = 0;
+    if (multiTest) cin >> T;
+    else T = 1;
+    //setprecision
+    precise(4);
     
     while (T--) solve();
     
