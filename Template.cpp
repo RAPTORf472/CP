@@ -7,6 +7,11 @@
 #define fs3 fs
 #define sc3 sc.fs
 #define rd3 sc.sc
+#define iiii pair<ii, ii>
+#define fs4 fs.fs
+#define sc4 fs.sc
+#define rd4 sc.fs
+#define fo4 sc.sc
 #define db double
 #define int long long
 
@@ -67,6 +72,8 @@ void solve() {
 }
 
 signed main() {
+    
+    fastIO;
     
     int T = 1;
     
