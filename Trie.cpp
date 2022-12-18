@@ -2,69 +2,88 @@
 
 using namespace std;
 
-const int S = 26;
 struct Trie {
-    struct TrieNode {
-        int nxt[S], cnt, idx, app;
     
-        TrieNode() {
-            for(int i = 0; i < S; i++) nxt[i] = 0;
-            cnt = idx = app = 0;
-        }
+    static const int S = 26;
+    char base = 'a';
+    
+    struct TrieNode {
+        
+        int nxt[S], cnt = 0, End = 0;
+        
     };
-
+    
     vector<TrieNode> trie;
-
-    Trie() {
-        trie.emplace_back();
-    }
-
-    void insert(string val) {
+    
+    Trie() {trie.emplace_back();}
+    Trie(char c) : base(c) {Trie();}
+    
+    void setBase(char c) {base = c;}
+    
+    void insert(string s) {
+        
         int pos = 0;
-        for(int b = 0; b < val.size(); b++) {
-            int id = val[b] - 'a';
-            if(!trie[pos].nxt[id]) {
+        
+        for (int i = 0; i < s.size(); i++) {
+            
+            int id = s[i] - base;
+            
+            if (!trie[pos].nxt[id]) {
+                
                 trie[pos].nxt[id] = trie.size();
                 trie.emplace_back();
+                
             }
+            
+            pos = trie[pos].nxt[id];
+            
+        }
+        
+        trie[pos].End++;
+        
+    }
     
-            pos = trie[pos].nxt[id];
-            trie[pos].cnt++;
-        }
-        trie[pos].app++;
-    }
-
-    int count(string val) {
+    int count (string s) {
+        
         int pos = 0;
-        for(int b = 0; b < val.size(); b++) {
-            int id = val[b] - 'a';
-            if(!trie[pos].nxt[id]) return 0;
+        
+        for (int i = 0; i < s.size(); i++) {
+            
+            int id = s[i] - base;
+            
+            if (!trie[pos].nxt[id]) return 0;
             pos = trie[pos].nxt[id];
+            
         }
-        return trie[pos].app;
+        
+        return trie[pos].End;
+        
     }
-
-    int erase(string val, int t) {
-        int c = count(val);
-        if(c == 0) return 0;
-        t = min(t, c);
-
+    
+    bool erase(string s) {
+        
         int pos = 0;
-        for(int b = 0; b < val.size(); b++) {
-            int id = val[b] - 'a';
+        
+        for (int i = 0; i < s.size(); i++) {
+            
+            int id = s[i] - base;
+            
+            if (!trie[pos].nxt[id]) return false;
             pos = trie[pos].nxt[id];
-            trie[pos].cnt -= t;
+            
         }
-        trie[pos].app -= t;
-
-        return t;
+        
+        trie[pos].End--;
+        
+        return true;
+        
     }
-};
+    
+} trie;
+
 
 signed main() {
-    
-    Trie trie;
-    
+        
     trie.insert("abcd");
     
     cout << trie.count("abcd") << endl;
