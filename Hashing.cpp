@@ -11,7 +11,7 @@ struct Hash {
     
     Hash() {
         
-        powBase1[0] = powBase1[0] = 1;
+        powBase1[0] = powBase2[0] = 1;
         
         for (int i = 1; i < S; i++) {
             
@@ -24,17 +24,17 @@ struct Hash {
     
     Hash(string &s) : Hash() {
         
-        sz = s.size();
         hash(s);
         
     }
     
     void hash(string &s) {
         
+        sz = s.size();
         for (int i = 1; i <= sz; i++) {
             
-            Hash1[i] = (Hash1[i-1] * Base1 + (s[i-1] - 'a' - 1)) % Mod1;
-            Hash2[i] = (Hash2[i-1] * Base2 + (s[i-1] - 'a' - 1)) % Mod2;
+            Hash1[i] = (Hash1[i-1] * Base1 + (s[i-1] - 'a' + 1)) % Mod1;
+            Hash2[i] = (Hash2[i-1] * Base2 + (s[i-1] - 'a' + 1)) % Mod2;
             
         }
         
