@@ -53,6 +53,12 @@ int binPow(int a, int b, int m) {
     
 }
 
+int sqr(int a) {
+    
+    return a * a;
+    
+}
+
 void setIO(string s) {
     
     if (s.empty()) return;
