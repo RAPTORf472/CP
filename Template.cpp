@@ -35,6 +35,7 @@ typedef unsigned long long ull;
 
 const int N = 2e5 + 100;
 const int MOD = 1e9 + 7;
+const int INF = 1e9;
 
 int binPow(int a, int b, int m) {
     
