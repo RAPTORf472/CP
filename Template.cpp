@@ -22,6 +22,8 @@
 #define Sortlr(v, l, r) sort(v + l, v + r);
 #define rev(v) reverse(v.begin(), v.end());
 #define revlr(v) reverse(v + l, v + r);
+#define Unique(v) v.erase(unique(all(v)), v.end());
+#define SUnique(v) Sort(v); Unique(v);
 
 #pragma GCC Optimize("O2")
 #define endl "\n"
