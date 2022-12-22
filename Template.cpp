@@ -38,6 +38,37 @@ typedef unsigned long long ull;
 const int N = 2e5 + 100;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
+const int LOG = 25;
+
+ostream& operator << (ostream &os, ii a) {
+    
+    os << a.fs << ' ' << a.sc;
+    
+    return os;
+    
+}
+
+ostream& operator << (ostream &os, iii a) {
+    
+    os << a.fs3 << " " << a.sc3 << " " << a.rd3;
+    
+    return os;
+    
+}
+
+ostream& operator << (ostream &os, iiii a) {
+    
+    os << a.fs4 << ' ' << a.sc4 << " " << a.rd4 << " " << a.fo4;
+    
+    return os;
+    
+}
+
+int ceil(int a, int b) {
+    
+    return (a + b - 1) / b;
+    
+}
 
 int binPow(int a, int b, int m) {
     
