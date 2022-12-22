@@ -26,6 +26,8 @@
 #define SUnique(v) Sort(v); Unique(v);
 #define Fill(v) memset(v, 0, sizeof v);
 #define Filldp(v) memset(v, -1, sizeof v);
+#define mp(a, b) make_pair(a, b)
+#define Has(v, l, r, val) binary_search(v + l, v + r, val)
 
 #pragma GCC Optimize("O2")
 #define endl "\n"
