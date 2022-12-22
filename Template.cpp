@@ -24,6 +24,8 @@
 #define revlr(v) reverse(v + l, v + r);
 #define Unique(v) v.erase(unique(all(v)), v.end());
 #define SUnique(v) Sort(v); Unique(v);
+#define Fill(v) memset(v, 0, sizeof v);
+#define Filldp(v) memset(v, -1, sizeof v);
 
 #pragma GCC Optimize("O2")
 #define endl "\n"
