@@ -122,20 +122,20 @@ struct SegmentTree {
         push(id);
         int mid = (l+r) / 2;
         
-        return max(query(id*2, l, mid, u, v),
-                   query(id*2+1, mid+1, r, u, v));
+        return max(get(id*2, l, mid, u, v),
+                   get(id*2+1, mid+1, r, u, v));
                    
     }
     
     int get(int l, int r) {
         
-        return query(1, 1, n, l, r);
+        return get(1, 1, n, l, r);
         
     }
     
     int get(int u) {
         
-        return query(u, u);
+        return get(u, u);
         
     }
     
