@@ -109,7 +109,7 @@ struct SegmentTree {
         
     }
     
-    int query(int id, int l, int r, int u, int v) {
+    int get(int id, int l, int r, int u, int v) {
         
         if (v < l || r < u) return -1e17;
         
@@ -127,13 +127,13 @@ struct SegmentTree {
                    
     }
     
-    int query(int l, int r) {
+    int get(int l, int r) {
         
         return query(1, 1, n, l, r);
         
     }
     
-    int query(int u) {
+    int get(int u) {
         
         return query(u, u);
         
