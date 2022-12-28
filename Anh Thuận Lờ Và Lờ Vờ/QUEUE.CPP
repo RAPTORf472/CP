@@ -15,7 +15,6 @@
 #define db double
 #define int long long
 
-#define show(v) for (auto i : v) cout << i << " "; cout << endl;
 #define showlr(v, l, r) for (int i = l; i <= r; i++) cout << v[i] << " "; cout << endl;
 #define all(v) v.begin(), v.end()
 #define Sort(v) sort(all(v));
@@ -36,8 +35,8 @@ typedef long long ll;
 typedef unsigned long long ull;
 
 const int N = 2e5 + 100;
-const int MOD = 1e9 + 7;
-const int INF = 1e9;
+const int MOD = 1e15 + 7;
+const int INF = 1e15;
 
 int binPow(int a, int b, int m) {
     
@@ -53,6 +52,22 @@ int binPow(int a, int b, int m) {
     }
     
     return prod;
+    
+}
+
+ostream& operator << (ostream &os, ii a) {
+    
+    os << a.fs << ' ' << a.sc;
+    
+    return os;
+    
+}
+
+ostream& operator << (ostream &os, iii a) {
+    
+    os << a.fs3 << " " << a.sc3 << " " << a.rd3;
+    
+    return os;
     
 }
 
@@ -83,47 +98,145 @@ void setIO(string s) {
     
 }
 
+int ans[N + 1];
+
+multiset<iii> s, org;
+queue<iii> q;
+int n, m, k, cur, cura; 
+
+iii getCandidate(int x) {
+    
+    int rem = x % k;
+    set<iii>::iterator its = s.lower_bound({rem, {-INF, 0}});
+    set<iii>::iterator ito = org.lower_bound({x, {-INF, 0}});
+    iii cands = (*its);
+    iii cando = (*ito);
+    if (s.size() && its != s.end()) cands.fs3 += x / k * k;
+    if (its == s.end() && s.size()) {
+        
+        its = s.begin();
+        cands = (*its);
+        cands.fs3 += x / k * k + k;
+        
+    }
+    
+    if (s.empty()) {
+        
+        cands = {INF, {INF, INF}};
+        
+    }
+    
+    if (ito == org.end()) {
+        
+        cando = {INF, {INF, INF}};
+        
+    }
+    
+    iii res;
+    int in;
+
+    if (cands > cando) {
+        
+        res = cando;
+        if (org.size() && ito != org.end()) {
+            
+            org.erase(ito);
+
+        }
+        
+    } else {
+        
+        res = cands;
+        if (s.size() && its != s.end()) {
+            
+            s.erase(its);
+
+        }
+        
+    }
+    
+    cura = max(cura, res.fs3);
+    
+    while (q.size() && q.front().fs3 <= res.fs3) {
+            
+        iii tem = q.front();
+        ans[tem.sc3] = tem.fs3;
+        q.pop();
+        
+    }
+
+    int del;
+    if (q.size()) del = q.front().rd3;
+    else del = res.fs3;
+    res.fs3 = max(res.fs3, cur) + res.rd3;
+
+    while (org.size() && (*org.begin()).fs3 <= del) {
+        
+        int a = (*org.begin()).fs3, b = (*org.begin()).rd3, id = (*org.begin()).sc3;
+        s.insert({a % k, {id, b}});
+        org.erase(org.begin());
+        
+    }
+    
+    return res;
+    
+}
+
 void solve() {
     
-    int n, m, k; cin >> n >> m >> k;
-    int cur = 0;
-    
-    deque<int> q;
-    
-    int a, b; cin >> a >> b;
-    q.push_back(a + b);
-    cur = a + b;
-    
-    for (int i = 2; i <= n; i++) {
+    cin >> n >> m >> k;
+
+    for (int i = 1, a, b; i <= n; i++) {
         
         cin >> a >> b;
+        org.insert({a, {i, b}});
         
-        if (q.empty()) {
-            
-            q.push_back(max(cur, a) + b);
-            cur = q.back();
-            continue;
-            
-        }
-         
-        while (q.size() && q.front() < a) {
-            
-            cout << q.front() << endl;   
-            q.pop_front();
+    }
+    
+    for (int i = 1; i <= n; i++) {
         
-        }
+        int nxt;
+        if (q.empty()) nxt = cur;
+        else nxt = q.back().rd3;
         
         if (q.size() >= m) {
             
-            q.push_back(max(a + ceil(a - q.front(), k), cur) + b);
-            cur = q.back();
-            cout << q.front() << endl;
-            q.pop_front();
+            if (nxt < q.front().fs3) nxt = q.front().fs3;
             
+        }
+        
+        iii cand = getCandidate(nxt);
+        int a = cand.fs3, b = cand.rd3, id = cand.sc3;
+
+        if (q.size() < m) {
+            
+            iii tem = {a, {id, cura}};
+            q.push(tem);
+            
+            if (q.size() == m) {
+                
+                while (org.size() && (*org.begin()).fs3 <= q.front().fs3) {
+                    
+                    iii tem = *org.begin();
+                    int a = tem.fs3, id = tem.sc3, b = tem.rd3;
+                    s.insert({a % k, {id, b}});
+                    org.erase(org.begin());
+                    
+                }
+                
+            }
+            
+            cur = cand.fs3;
+
         } else {
             
-            q.push_back(max(a, cur) + b);
-            cur = q.back();
+            s.insert({a % k, {id, b}});
+            nxt = q.front().fs3;
+            cand = getCandidate(nxt);
+            
+            iii tem = {cand.fs3, {cand.sc3, cura}};
+            q.push(tem);
+            cur = cand.fs3;
             
         }
         
@@ -131,17 +244,19 @@ void solve() {
     
     while (q.size()) {
         
-        cout << q.front() << endl;
-        q.pop_front();
+        int a = q.front().fs3, id = q.front().sc3; q.pop();
+        ans[id] = a;
         
     }
+    
+    for (int i = 1; i <= n; i++) cout << ans[i] << endl;
     
 }
 
 signed main() {
     
     fastIO;
-    
+
     int T = 1;
     
     bool multiTest = 0;
