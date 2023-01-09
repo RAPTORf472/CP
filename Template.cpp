@@ -44,6 +44,9 @@ const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const int LOG = 25;
 
+const int dx[4] = {1, 0, -1, 0};
+const int dy[4] = {0, -1, 0, 1};
+ 
 ostream& operator << (ostream &os, ii a) {
     
     os << a.fs << ' ' << a.sc;
@@ -107,7 +110,7 @@ void setIO(string s) {
 }
 
 int n;
-int a[N];
+int arr[N];
 
 void solve() {
     
