@@ -94,9 +94,31 @@ int binPow(int a, int b, int m) {
     
 }
 
+int pow(int a, int b) {
+    
+    int prod = 1;
+    
+    while (b) {
+        
+        if (b & 1) prod *= a;
+        a *= a;
+        b /= 2;
+        
+    }
+    
+    return prod;
+    
+}
+
 int sqr(int a) {
     
     return a * a;
+    
+}
+
+int len(int x) {
+    
+    return log10(x) + 1;
     
 }
 
