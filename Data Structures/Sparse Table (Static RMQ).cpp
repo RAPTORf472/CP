@@ -3,7 +3,6 @@ const int LOG = 25;
 
 struct RMQ {
     
-    int lg[N];
     int st[N][LOG];
 
     void init(int *arr, int n) {
