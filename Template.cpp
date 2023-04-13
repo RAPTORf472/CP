@@ -28,6 +28,14 @@
 #define Filldp(v) memset(v, -1, sizeof v);
 #define mp(a, b) make_pair(a, b)
 #define Has(v, l, r, val) binary_search(v + l, v + r, val)
+#define forlr(i, l, r) for (int i = l; i <= r; i++)
+#define forrl(i, r, l) for (int i = r; i >= l; i--)
+
+#define pop_front_set(s) s.erase(s.begin());
+#define pop_back_set(s) s.erase(s.rbegin());
+#define erase_set(s, x) s.erase(s.find(x));
+#define emptyQ(q) while (q.size()) q.pop();
+#define emptyS(s) while (s.size()) s.pop();
 
 #pragma GCC Optimize("O2")
 #define endl "\n"
@@ -94,7 +102,7 @@ int binPow(int a, int b, int m) {
     
 }
 
-int pow(int a, int b) {
+int Pow(int a, int b) {
     
     int prod = 1;
     
@@ -131,11 +139,11 @@ void setIO(string s) {
     
 }
 
-int n;
+int n, m, q, k;
 int arr[N];
+vector<int> adj[N];
 
 void solve() {
-    
     
     
 }
@@ -146,7 +154,7 @@ signed main() {
     
     int T = 1;
     
-    bool multiTest = 1;
+    bool multiTest = 0;
     if (multiTest) cin >> T;
     
     while (T--) solve();
