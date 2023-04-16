@@ -2,11 +2,11 @@ bool queryMode;
 
 struct Line {
     
-	mutable int a, b, leftX;
+	mutable int a, b, rightX;
 	
 	bool operator<(const Line& o) const {
 	    
-		return queryMode ? leftX < o.leftX : a < o.a;
+		return queryMode ? rightX < o.rightX : a < o.a;
 		
 	}
 	
@@ -18,15 +18,15 @@ struct DynamicHull : multiset<Line> {
 	    
 		if (y == end()) { 
 		    
-		    x->leftX = INF; 
+		    x->rightX = INF; 
 		    return false;
 		    
 		}
 		
-		if (x->a == y->a) x->leftX = x->b > y->b ? INF : -INF;
-		else x->leftX = (y->b - x->b) / (x->a - y->a);
+		if (x->a == y->a) x->rightX = x->b > y->b ? INF : -INF;
+		else x->rightX = (y->b - x->b) / (x->a - y->a);
 		
-		return x->leftX >= y->leftX;
+		return x->rightX >= y->rightX;
 		
 	}
 	
