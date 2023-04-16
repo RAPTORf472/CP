@@ -30,12 +30,12 @@ struct DynamicHull : multiset<Line> {
 		
 	}
 	
-    void add(int a, int b) {
+	void add(int a, int b) {
 	    
 		auto it = insert({a, b, 0});
-		
+
 		while (bad(it, next(it))) erase(next(it));
-        while (it != begin() && bad(prev(it), it)) bad(prev(it), erase(it));
+		while (it != begin() && bad(prev(it), it)) bad(prev(it), erase(it));
 		
 	}
 	
