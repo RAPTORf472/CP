@@ -1,12 +1,12 @@
-bool Q;
+bool queryMode;
 
 struct Line {
     
-	mutable ll a, b, preX;
+	mutable int a, b, leftX;
 	
 	bool operator<(const Line& o) const {
 	    
-		return Q ? preX < o.preX : a < o.a;
+		return queryMode ? leftX < o.leftX : a < o.a;
 		
 	}
 	
@@ -18,32 +18,32 @@ struct DynamicHull : multiset<Line> {
 	    
 		if (y == end()) { 
 		    
-		    x->preX = INF; 
+		    x->leftX = INF; 
 		    return false;
 		    
 		}
 		
-		if (x->a == y->a) x->preX = x->b > y->b ? INF : -INF;
-		else x->preX = (y->b - x->b) / (x->a - y->a);
+		if (x->a == y->a) x->leftX = x->b > y->b ? INF : -INF;
+		else x->leftX = (y->b - x->b) / (x->a - y->a);
 		
-		return x->preX >= y->preX;
+		return x->leftX >= y->leftX;
 		
 	}
 	
-    void add(ll k, ll m) {
+    void add(int a, int b) {
 	    
-		auto z = insert({k, m, 0}), y = z++, x = y;
+		auto it = insert({a, b, 0});
 		
-		while (bad(y, next(y))) erase(next(y));
-        while (y != begin() && bad(prev(y), y)) bad(prev(y), erase(y));
+		while (bad(it, next(it))) erase(next(it));
+        while (it != begin() && bad(prev(it), it)) bad(prev(it), erase(it));
 		
 	}
 	
-	ll query(ll x) {
+	int query(int x) {
 	    
 		assert(!empty());
 		
-		Q = 1; auto l = *lower_bound({0,0,x}); Q = 0;
+		queryMode = 1; auto l = *lower_bound({0,0,x}); queryMode = 0;
 		return l.a * x + l.b;
 		
 	}
