@@ -1,47 +1,51 @@
-struct line {
-    ll m, b;
+bool Q;
 
-    mutable function<const line*()> succ;
-    bool operator<(const line& rhs) const {
-        if (rhs.b != -INF) return m < rhs.m;
-        const line* s = succ();
-        if (!s) return 0;
-        ll x = rhs.m;
-        return b - s->b < (s->m - m) * x;
-    }
+struct Line {
+    
+	mutable ll a, b, preX;
+	
+	bool operator<(const Line& o) const {
+	    
+		return Q ? preX < o.preX : a < o.a;
+		
+	}
+	
 };
+ 
+struct DynamicHull : multiset<Line> {
 
-struct DynamicHull : public multiset<line> { 
-    bool bad(iterator y) {
-        auto z = next(y);
-        if(y == begin()) {
-            if (z == end()) return 0;
-            return y->m == z->m && y->b <= z->b;
-        }
-
-        auto x = prev(y);
-        if (z == end()) return y->m == x->m && y->b <= x->b;
-        return 1.0 * (x->b - y->b) * (z->m - y->m) 
-            >= 1.0 * (y->b - z->b) * (y->m - x->m);
-    }
-
-    void add(ll m, ll b) {
-        auto y = insert({ m, b });
-        y->succ = [=] { 
-            return next(y) == end() ? 0 : &*next(y); 
-        };
-        
-        if(bad(y)) {
-            erase(y);
-            return;
-        }
-
-        while (next(y) != end() && bad(next(y))) erase(next(y));
-        while (y != begin() && bad(prev(y))) erase(prev(y));
-    }
-
-    ll eval(ll x) {
-        auto l = *lower_bound((line) { x, -INF });
-        return l.m * x + l.b;
-    }
+	bool bad(iterator x, iterator y) {
+	    
+		if (y == end()) { 
+		    
+		    x->preX = INF; 
+		    return false;
+		    
+		}
+		
+		if (x->a == y->a) x->preX = x->b > y->b ? INF : -INF;
+		else x->preX = (y->b - x->b) / (x->a - y->a);
+		
+		return x->preX >= y->preX;
+		
+	}
+	
+    void add(ll k, ll m) {
+	    
+		auto z = insert({k, m, 0}), y = z++, x = y;
+		
+		while (bad(y, next(y))) erase(next(y));
+        while (y != begin() && bad(prev(y), y)) bad(prev(y), erase(y));
+		
+	}
+	
+	ll query(ll x) {
+	    
+		assert(!empty());
+		
+		Q = 1; auto l = *lower_bound({0,0,x}); Q = 0;
+		return l.a * x + l.b;
+		
+	}
+	
 };
