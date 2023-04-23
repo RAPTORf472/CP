@@ -51,6 +51,7 @@ const int N = 2e5 + 100;
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const int LOG = 25;
+const int LINF = 1e15 + 100;
 
 const int dx[4] = {1, 0, -1, 0};
 const int dy[4] = {0, -1, 0, 1};
@@ -142,17 +143,18 @@ void setIO(string s) {
 int n, m, q, k;
 int arr[N];
 vector<int> adj[N];
+mt19937 rng(chrono::steady_clock().now().time_since_epoch().count());
 
 void solve() {
     
-    
+
 }
 
 signed main() {
     
     fastIO;
     
-    int T = 1;
+    int T = 10;
     
     bool multiTest = 0;
     if (multiTest) cin >> T;
