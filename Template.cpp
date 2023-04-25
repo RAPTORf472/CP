@@ -154,7 +154,7 @@ signed main() {
     
     fastIO;
     
-    int T = 10;
+    int T = 1;
     
     bool multiTest = 0;
     if (multiTest) cin >> T;
