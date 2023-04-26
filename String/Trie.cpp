@@ -16,7 +16,6 @@ struct Trie {
     vector<TrieNode> trie;
     
     Trie() {trie.emplace_back();}
-    Trie(char c) : base(c) {Trie();}
     
     void setBase(char c) {base = c;}
     
