@@ -6,7 +6,7 @@ struct TrieBit {
     struct TrieNode {
         
         int nxt[2];
-        int End = 0;
+        int cnt = 0, End = 0;
         
     };
     
@@ -36,6 +36,7 @@ struct TrieBit {
             }
             
             pos = trie[pos].nxt[id];
+            trie[pos].cnt++;
             
         }
         
@@ -58,6 +59,30 @@ struct TrieBit {
         }
         
         return trie[pos].End;
+        
+    }
+    
+    bool erase(int x) {
+        
+        bitset<S> s(x);
+        
+        int pos = 0;
+        
+        forrl(i, S - 1, 0) {
+            
+            int id = s[i];
+            if (!trie[pos].nxt[id]) return 0;
+            
+            int tmp = pos;
+            pos = trie[pos].nxt[id];
+            trie[pos].cnt--;
+            if (trie[pos].cnt == 0) trie[tmp].nxt[id] = 0; 
+            
+        }
+        
+        trie[pos].End--;
+        
+        return true;
         
     }
     
