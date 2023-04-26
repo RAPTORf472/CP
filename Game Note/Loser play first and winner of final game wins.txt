@@ -1,0 +1,9 @@
+Win: player who currently move can force win
+Lose: player who currently move can force lose
+
++ win == 0 => the other player can force lose the game
++ lose == 0 => the other player can force win the game
+
+- if (win == 0): The second player win because he can force win in every game
+- if (win == 1 && lose == 1): The first player win as he has total control over every game (Lose every game except for the last game)
+- if (win == 1 && lose == 0): The second player win as the first player are forced to lose every game except the last.
