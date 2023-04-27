@@ -19,10 +19,12 @@ int gcd(int a, int b, int &x, int &y) {
 
 ii diophantine(int a, int b, int c) {
     
+    if (a == 0 && b == 0 && c == 0) return {INF, INF};
+    
     int x0, y0;
     
     int d = gcd(a, b, x0, y0);
-    if (c % d) return {-INF, -INF};
+    if (d == 0 || c % d) return {-INF, -INF};
     
     x0 *= c / d;
     y0 *= c / d;
