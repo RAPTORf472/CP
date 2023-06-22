@@ -37,7 +37,6 @@ void solve() {
     for (int i = 1, a, b; i <= m; i++) {
         
         cin >> a >> b;
-        a++, b++;
         adj[a].push_back(b);
         Radj[b].push_back(a);
         
@@ -69,7 +68,7 @@ void solve() {
     forlr(i, 1, scc) {
         
         cout << comps[i].size() << " ";
-        for (int u : comps[i]) cout << u - 1 << " "; cout << endl;
+        for (int u : comps[i]) cout << u << " "; cout << endl;
         
     }
 
