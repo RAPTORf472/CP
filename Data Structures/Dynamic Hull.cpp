@@ -2,14 +2,14 @@ bool queryMode;
  
 struct Line {
     
-	mutable ll a, b, preX;
-	
-	bool operator<(const Line& o) const {
-	    
-		return queryMode ? preX < o.preX : a < o.a;
-		
-	}
-	
+    mutable int a, b, rightX;
+    
+    bool operator < (const Line &l) const {
+        
+        return queryMode ? rightX < l.rightX : a < l.a;
+        
+    }
+    
 };
  
 
