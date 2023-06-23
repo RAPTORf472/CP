@@ -44,7 +44,7 @@ struct DynamicHull : multiset<Line> {
         while (bad(cur, next(cur))) erase(next(cur));
         
         if (pre != begin() && bad(--pre, cur)) bad(pre, cur = erase(cur));
-        while ((cur = pre) != begin() && (--pre)->rightX >= cur->rightX) bad(pre, erase(cur));
+        else while ((cur = pre) != begin() && (--pre)->rightX >= cur->rightX) bad(pre, erase(cur));
         
 
     }
