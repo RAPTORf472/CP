@@ -1,3 +1,18 @@
+bool queryMode;
+ 
+struct Line {
+    
+	mutable ll a, b, preX;
+	
+	bool operator<(const Line& o) const {
+	    
+		return queryMode ? preX < o.preX : a < o.a;
+		
+	}
+	
+};
+ 
+
 struct DynamicHull : multiset<Line> {
     
     int div(int a, int b) {
