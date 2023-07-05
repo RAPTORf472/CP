@@ -140,6 +140,7 @@ void setIO(string s) {
     
 }
 
+//Try Brute Force (maybe there is a pattern)
 //Try DP
 //Try Graph
 //Try Geometry
