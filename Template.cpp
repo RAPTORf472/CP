@@ -140,6 +140,12 @@ void setIO(string s) {
     
 }
 
+//Try DP
+//Try Graph
+//Try Geometry
+//Try switching between problem
+//Put down what you have on paper
+
 int n, m, q, k;
 int arr[N];
 vector<int> adj[N];
