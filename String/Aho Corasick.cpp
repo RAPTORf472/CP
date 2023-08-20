@@ -9,10 +9,8 @@ struct Trie {
     struct Node {
         
         int nxt[S];
-        int leaf = -1;
-        int p = -1;
         char pch;
-        int link = -1, leaflink = -1;
+        int p = -1, exit = -1, link = -1, exitLink = -1;
  
         Node(int p = -1, char ch = '$') : p(p), pch(ch) {
             
@@ -23,7 +21,7 @@ struct Trie {
     };
     
     vector<Node> trie;
-    Trie() : trie(1) {}
+    Trie() {trie.emplace_back(0);}
  
     void insert(string &s, int idx) {
         
@@ -44,7 +42,7 @@ struct Trie {
             
         }
         
-        trie[pos].leaf = idx;
+        trie[pos].exit = idx;
         
     }
  
@@ -55,9 +53,12 @@ struct Trie {
             if (u == 0 || trie[u].p == 0) trie[u].link = 0;
             else trie[u].link = go(getLink(trie[u].p), trie[u].pch);
             
-            getLink(trie[u].link);
-            trie[u].leaflink = (trie[trie[u].link].leaf != -1) ? trie[u].link : trie[trie[u].link].leaflink;
+            int back = trie[u].link;
+            getLink(back);
             
+            if (trie[back].exit != -1) trie[u].exitLink = back;
+            else trie[u].exitLink = trie[back].exitLink;
+
         }
         
         return trie[u].link;
@@ -70,8 +71,9 @@ struct Trie {
         
         if (trie[u].nxt[id] == -1) {
             
-            trie[u].nxt[id] = (u == 0) ? 0 : go(getLink(u), c);
-                
+            if (u == 0) trie[u].nxt[id] = 0;
+            else trie[u].nxt[id] = go(getLink(u), c);
+
         }
         
         return trie[u].nxt[id];
@@ -86,12 +88,12 @@ struct Trie {
             
             pos = go(pos, s[i]);
             getLink(pos);
-            int cur = (trie[pos].leaf == -1) ? trie[pos].leaflink : pos;
+            int cur = (trie[pos].exit == -1) ? trie[pos].exitLink : pos;
             
             while (cur != -1) {
                 
-                if (occ[trie[cur].leaf] == -1) occ[trie[cur].leaf] = i;
-                cur = trie[cur].leaflink;
+                if (occ[trie[cur].exit] == -1) occ[trie[cur].exit] = i;
+                cur = trie[cur].exitLink;
                 
             }
             
