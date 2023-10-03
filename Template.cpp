@@ -3,16 +3,39 @@
 #define ii pair<int, int>
 #define fs first
 #define sc second
+#define iii pair<int, ii>
+#define fs3 fs
+#define sc3 sc.fs
+#define rd3 sc.sc
+#define iiii pair<ii, ii>
+#define fs4 fs.fs
+#define sc4 fs.sc
+#define rd4 sc.fs
+#define fo4 sc.sc
 #define db double
 #define int long long
 
 #define show(v) for (auto i : v) cout << i << " "; cout << endl;
 #define showlr(v, l, r) for (int i = l; i <= r; i++) cout << v[i] << " "; cout << endl;
 #define all(v) v.begin(), v.end()
+#define Sort(v) sort(all(v));
+#define Sortlr(v, l, r) sort(v + l, v + r);
+#define rev(v) reverse(v.begin(), v.end());
+#define revlr(v) reverse(v + l, v + r);
 #define Unique(v) v.erase(unique(all(v)), v.end());
 #define SUnique(v) Sort(v); Unique(v);
+#define Fill(v) memset(v, 0, sizeof v);
+#define Filldp(v) memset(v, -1, sizeof v);
+#define mp(a, b) make_pair(a, b)
+#define Has(v, l, r, val) binary_search(v + l, v + r, val)
 #define forlr(i, l, r) for (int i = l; i <= r; i++)
 #define forrl(i, r, l) for (int i = r; i >= l; i--)
+
+#define pop_front_set(s) s.erase(s.begin());
+#define pop_back_set(s) s.erase(s.rbegin());
+#define erase_set(s, x) s.erase(s.find(x));
+#define emptyQ(q) while (q.size()) q.pop();
+#define emptyS(s) while (s.size()) s.pop();
 
 #pragma GCC Optimize("O2")
 #define endl "\n"
@@ -41,6 +64,22 @@ ostream& operator << (ostream &os, ii a) {
     
 }
 
+ostream& operator << (ostream &os, iii a) {
+    
+    os << a.fs3 << " " << a.sc3 << " " << a.rd3;
+    
+    return os;
+    
+}
+
+ostream& operator << (ostream &os, iiii a) {
+    
+    os << a.fs4 << ' ' << a.sc4 << " " << a.rd4 << " " << a.fo4;
+    
+    return os;
+    
+}
+
 int ceil(int a, int b) {
     
     return (a + b - 1) / b;
@@ -64,12 +103,6 @@ int binPow(int a, int b, int m) {
     
 }
 
-int modInv(int a, int m) {
-
-    return binPow(a, m - 2, m);
- 
-}
-
 int Pow(int a, int b) {
     
     int prod = 1;
@@ -83,6 +116,12 @@ int Pow(int a, int b) {
     }
     
     return prod;
+    
+}
+
+int sqr(int a) {
+    
+    return a * a;
     
 }
 
@@ -107,7 +146,6 @@ void setIO(string s) {
 //Try Geometry
 //Try switching between problem
 //Put down what you have on paper
-//IMPORTANT: WRITE DOWN THE FORMULA
 
 int n, m, q, k;
 int arr[N];
