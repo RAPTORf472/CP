@@ -10,7 +10,7 @@
 
 #define int long long
 
-#define show(v) for (auto i : v) {cout << i << " "; cout << endl;}
+#define show(v) {for (auto i : v) cout << i << " "; cout << endl;}
 #define showlr(v, l, r) {for (int i = l; i <= r; i++) cout << v[i] << " "; cout << endl;}
 #define all(v) v.begin(), v.end()
 #define SUnique(v) {sort(all(v)); v.erase(unique(all(v)), v.end());}
