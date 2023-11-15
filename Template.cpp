@@ -57,6 +57,18 @@ int binPow(int a, int b, int m = LLONG_MAX) {
     
 }
 
+void chMax(int &a, int b) {
+
+	a = max(a, b);
+
+}
+
+void chMin(int &a, int b) {
+	
+	a = min(a, b);
+	
+}
+
 void setIO(string s) {
     
     if (s.empty()) return;
