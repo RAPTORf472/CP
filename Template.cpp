@@ -1,4 +1,4 @@
-/*CP template version 3.0 - Laconic*/
+/*CP template version 3.1 - Laconic*/
 
 #include <bits/stdc++.h>
 
@@ -16,8 +16,9 @@
 #define SUnique(v) {sort(all(v)); v.erase(unique(all(v)), v.end());}
 #define forlr(i, l, r) for (int i = l; i <= r; i++)
 #define forrl(i, r, l) for (int i = r; i >= l; i--)
+#define sz(v) ((int) v.size());
 
-#pragma GCC Optimize("O2")
+#pragma GCC optimize("O2")
 #define endl "\n"
 #define precise(x) cout << fixed << setprecision(x);
 
@@ -29,8 +30,8 @@ const int INF = 1e9;
 const int LOG = 25;
 const long long LINF = 1e15 + 100;
 
-const int dx[4] = {1, 0, -1, 0};
-const int dy[4] = {0, -1, 0, 1};
+const int dx[5] = {0, 1, 0, -1, 0};
+const int dy[5] = {0, 0, -1, 0, 1};
  
 ostream& operator << (ostream &os, ii a) {
     
